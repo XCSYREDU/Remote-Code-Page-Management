@@ -57,6 +57,47 @@
 
                 </DockPanel>
             </TabItem>
+            <TabItem Header="remote files Files" Padding="10 5" Name="remotefiles">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Label>Path:</Label>
+                        <Label Width="20"></Label>
+                        <TextBlock x:Name="serverPath" x:FieldModifier="public" VerticalAlignment="Center" FontWeight="Medium" FontSize="12"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                        <Label>cmd:</Label>
+                        <Label Width="20"></Label>
+                        <TextBlock x:Name="cmd2" x:FieldModifier="public" VerticalAlignment="Center" FontWeight="Medium" FontSize="12"></TextBlock>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                        <Button  x:Name="Initial2" Height="25" Width="500" Margin="36,5,5,4" Click="Publish_files_Click" Content="Publish Files" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                        <Label Content="file type:" Margin="5,5,5,5"/>
+                        <TextBlock x:Name="SearchBox2" x:FieldModifier="public" VerticalAlignment="Center" FontWeight="ExtraBold" FontSize="12"></TextBlock>
+                        <Label Width="20"></Label>
+                        <Label Content="Regex:" Margin="75,5,5,5"/>
+                        <TextBox x:Name="Regex2" Width="100" Height="25" Text="">
+                        </TextBox>
+
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="17*"/>
+                            <ColumnDefinition Width="276*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="5"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <ListBox Grid.Row="0" x:Name="Dirsremo" x:FieldModifier="public" Margin="5" FontWeight="Medium" FontSize="12" MouseDoubleClick="Dirs_MouseDoubleClick" Grid.ColumnSpan="2"></ListBox>
+                        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="#999" Grid.ColumnSpan="2"></GridSplitter>
+                        <ListBox Grid.Row="2" x:Name="Filesremo" x:FieldModifier="public" Margin="5,5,5,10" FontWeight="Medium" FontSize="12" SelectionMode="Single" SelectionChanged="Files_SelectionChanged" Grid.ColumnSpan="2" ></ListBox>
+
+                    </Grid>
+                </DockPanel>
+            </TabItem>
             <TabItem Header="Convert Files" Padding="10 5" Name="htmlfiles">
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">

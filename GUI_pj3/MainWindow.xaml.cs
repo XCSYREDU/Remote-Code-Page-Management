@@ -104,31 +104,31 @@ namespace PrototypeGui_OOD_Pr4
 
         private void clearDirs()
         {
-            Dirs.Items.Clear();
+            Dirsremo.Items.Clear();
         }
         //----< function dispatched by child thread to main thread >-------
 
         private void addDir(string dir)
         {
-            Dirs.Items.Add(dir);
+            Dirsremo.Items.Add(dir);
         }
         //----< function dispatched by child thread to main thread >-------
 
         private void insertParent()
         {
-            Dirs.Items.Insert(0, "..");
+            Dirsremo.Items.Insert(0, "..");
         }
         //----< function dispatched by child thread to main thread >-------
 
         private void clearFiles()
         {
-            Files.Items.Clear();
+            Filesremo.Items.Clear();
         }
         //----< function dispatched by child thread to main thread >-------
 
         private void addFile(string file)
         {
-            Files.Items.Add(file);
+            Filesremo.Items.Add(file);
         }
         //----< add client processing for message with key >---------------
 
@@ -203,16 +203,7 @@ namespace PrototypeGui_OOD_Pr4
             DispatcherLoadGetFiles();
         }
 
-
-
-
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
-        //----< open window showing contents of project directory >------
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void loadremote()
         {
             // start Comm
             endPoint_ = new CsEndPoint();
@@ -242,6 +233,22 @@ namespace PrototypeGui_OOD_Pr4
             msg.remove("command");
             msg.add("command", "getFiles");
             translater.postMessage(msg);
+        }
+
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+        //----< open window showing contents of project directory >------
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            loadremote();
+
+            path = Directory.GetCurrentDirectory();
+            path = getAncestorPath(3, path);
+            LoadNavTab(path);
 
             string[] regex = Environment.GetCommandLineArgs();
             List<String> temp1 = new List<string>();
@@ -262,7 +269,7 @@ namespace PrototypeGui_OOD_Pr4
             return path;
         }
         //----< file Find Libs tab with subdirectories and files >-------
-        /*
+        
         void LoadNavTab(string path)
         {
             Dirs.Items.Clear();
@@ -308,7 +315,7 @@ namespace PrototypeGui_OOD_Pr4
                 cmd_path = cmd_path + temp[i];
             }
             cmd.Text = cmd_path;
-        }*/
+        }
         //----< Load html dirs and files >-------------------------------
 
         void LoadHtmlFile(string path)
@@ -425,7 +432,7 @@ namespace PrototypeGui_OOD_Pr4
                     path = getAncestorPath(1, path);
                 else
                     path = System.IO.Path.Combine(path, selectedDir);
-                //LoadNavTab(path);
+                LoadNavTab(path);
             }
             catch
             {
@@ -472,7 +479,7 @@ namespace PrototypeGui_OOD_Pr4
                     {
                         path = Directory.GetCurrentDirectory();
                         path = getAncestorPath(3, path);
-                        //LoadNavTab(path);
+                        LoadNavTab(path);
                     }
                     else if (htmlfiles.IsSelected == true)
                     {
@@ -481,6 +488,10 @@ namespace PrototypeGui_OOD_Pr4
                         path = path + "\\ConvertedWebpages";
                         path = System.IO.Path.GetFullPath(path);
                         LoadHtmlFile(path);
+                    }
+                    else if(remotefiles.IsSelected == true)
+                    {
+                        loadremote();
                     }
                 }
                 catch
