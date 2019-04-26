@@ -1,0 +1,119 @@
+
+C:\Users\hopli\source\repos\CodePublisher>cd debug 
+
+C:\Users\hopli\source\repos\CodePublisher\Debug>CodePublisher.exe .. /s /demo *.h *.cpp [A-C](.*) 
+
+
+  Demonstrating Requirement #3 - Packages
+ -----------------------------------------
+  Converter & Display packages are available. Executive was replaced with 
+  CodePublisher which also acts as facade for the entire project.
+
+
+  Demonstrating Requirements #4 & #5 - command line arguments
+ -------------------------------------------------------------
+  Command Line: path [/option]* [/pattern]* [/regex]*
+    path is relative or absolute path where processing begins
+    [/option]* are one or more options of the form:
+      /s     - walk directory recursively
+      /demo  - run in demonstration mode (cannot coexist with /debug)
+      /debug - run in debug mode (cannot coexist with /demo)
+    [pattern]* are one or more pattern strings of the form:
+      *.h *.cpp *.cs *.txt or *.*
+    [regex] regular expression(s), i.e. [A-B](.*)
+
+  Changing cmd path to ../debug to test Requirement 5
+
+  Command Line: ../debug /s /demo *.h *.cpp 
+  Files found matching patterns:
+
+
+  processed 0 files in 1 directories
+
+  No files found in the current directory. We will 
+  continue since we deliberately changed argv[1] to 
+  test Requirement 5. After restoring argv[1], if there 
+  are no files to process, the program will terminate. 
+
+
+  Changing back cmd path to original to continue demonstartion.
+
+  Command Line: .. /s /demo *.h *.cpp 
+  Files found matching patterns:
+
+  -- C:\Users\hopli\source\repos\CodePublisher\CodePublisher\CodePublisher.h
+  -- C:\Users\hopli\source\repos\CodePublisher\CodePublisher\CodePublisher.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Converter\Converter.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Converter\Converter.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\DependencyTable\DependencyTable.h
+  -- C:\Users\hopli\source\repos\CodePublisher\DependencyTable\DependencyTable.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\DirExplorer-Naive\DirExplorerN.h
+  -- C:\Users\hopli\source\repos\CodePublisher\DirExplorer-Naive\DirExplorerN.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Display\Display.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Display\Display.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\FileSystem\FileSystem.h
+  -- C:\Users\hopli\source\repos\CodePublisher\FileSystem\FileSystem.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Logger\Cpp11-BlockingQueue.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Logger\Logger.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Logger\Cpp11-BlockingQueue.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Logger\Logger.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Process\Process.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Process\Process.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Utilities\CodeUtilities\CodeUtilities.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Utilities\CodeUtilities\CodeUtilities.cpp
+  -- C:\Users\hopli\source\repos\CodePublisher\Utilities\StringUtilities\StringUtilities.h
+  -- C:\Users\hopli\source\repos\CodePublisher\Utilities\StringUtilities\StringUtilities.cpp
+
+  Matching files to regexes - Available regexes: [A-C](.*) 
+   Files found matching regexes: 
+   -- C:\Users\hopli\source\repos\CodePublisher\CodePublisher\CodePublisher.h
+   -- C:\Users\hopli\source\repos\CodePublisher\CodePublisher\CodePublisher.cpp
+   -- C:\Users\hopli\source\repos\CodePublisher\Converter\Converter.h
+   -- C:\Users\hopli\source\repos\CodePublisher\Converter\Converter.cpp
+   -- C:\Users\hopli\source\repos\CodePublisher\Logger\Cpp11-BlockingQueue.h
+   -- C:\Users\hopli\source\repos\CodePublisher\Logger\Cpp11-BlockingQueue.cpp
+   -- C:\Users\hopli\source\repos\CodePublisher\Utilities\CodeUtilities\CodeUtilities.h
+   -- C:\Users\hopli\source\repos\CodePublisher\Utilities\CodeUtilities\CodeUtilities.cpp
+
+
+  processed 22 files in 60 directories
+
+  Demonstrating Requirements #6 & #7 - Convert and Display
+ ----------------------------------------------------------
+
+  Converting files to webpages
+  Output directory: C:\Users\hopli\source\repos\CodePublisher\ConvertedWebpages\
+  -- Converted: CodePublisher.h
+  -- Converted: CodeUtilities.h
+  -- Converted: CodePublisher.cpp
+  -- Converted: CodeUtilities.cpp
+  -- Converted: Converter.h
+  -- Converted: Converter.cpp
+  -- Converted: Cpp11-BlockingQueue.h
+  -- Converted: Cpp11-BlockingQueue.cpp
+
+  Displaying file: CodePublisher.h.html in browser
+  Displaying file: CodeUtilities.h.html in browser
+  --- child browser exited with this message ---
+  --- child browser exited with this message ---
+  Displaying file: CodePublisher.cpp.html in browser
+  --- child browser exited with this message ---
+  Displaying file: CodeUtilities.cpp.html in browser
+  --- child browser exited with this message ---
+  Displaying file: Converter.h.html in browser
+  --- child browser exited with this message ---
+  Displaying file: Converter.cpp.html in browser
+  --- child browser exited with this message ---
+  Displaying file: Cpp11-BlockingQueue.h.html in browser
+  --- child browser exited with this message ---
+  Displaying file: Cpp11-BlockingQueue.cpp.html in browser
+  --- child browser exited with this message ---
+
+  Demonstrating Requirement #8 - Automated Test Unit
+ ----------------------------------------------------
+  Well, this is the automated test unit.
+
+  All Requirements met. 
+
+
+C:\Users\hopli\source\repos\CodePublisher\Debug>cd .. 
