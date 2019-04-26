@@ -257,6 +257,7 @@ namespace PrototypeGui_OOD_Pr4
                 if (i.Contains(".*"))
                 {
                     Regex.Text = i;
+                    Regex2.Text = i;
                 }
             }
         }
