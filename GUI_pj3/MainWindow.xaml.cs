@@ -260,6 +260,8 @@ namespace PrototypeGui_OOD_Pr4
                     Regex2.Text = i;
                 }
             }
+            string path_re = System.IO.Path.GetFullPath("../Storage");
+            serverPath.Text = path_re;
         }
         //----< find parent paths >--------------------------------------
 
@@ -440,9 +442,59 @@ namespace PrototypeGui_OOD_Pr4
                 // just return
             }
         }
-        //----< open html files in chrome>-------------------------------
+        //----< Process remote files >-----------------------------------
+        private void Publish_files_Click_remo(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // start Comm
+                endPoint_ = new CsEndPoint();
+                endPoint_.machineAddress = "localhost";
+                endPoint_.port = 8082;
+                translater = new Translater();
+                translater.listen(endPoint_);
 
-        private void Convert_MOuseDoubleClick(object sender, MouseButtonEventArgs e)
+                // start processing messages
+                processMessages();
+
+                // load dispatcher
+                loadDispatcher();
+
+                CsEndPoint serverEndPoint = new CsEndPoint();
+                serverEndPoint.machineAddress = "localhost";
+                serverEndPoint.port = 8080;
+
+                //PathTextBlock.Text = "Storage";
+                string[] temp = Environment.GetCommandLineArgs();
+                string cmd = "";
+                for(int i = 0; i<temp.Length;i++)
+                {
+                    if(i == 1)
+                    {
+                        cmd += "..\\Storage";
+                        cmd += " ";
+                        continue;
+                    }
+                    cmd += temp[i];
+                    cmd += " ";
+                }
+                CsMessage msg = new CsMessage();
+                msg.add("to", CsEndPoint.toString(serverEndPoint));
+                msg.add("from", CsEndPoint.toString(endPoint_));
+                msg.add("command", "convertfiles");
+                msg.add("cmd", cmd);
+                translater.postMessage(msg);
+            }
+            catch
+            {
+
+            }
+        }
+        
+
+            //----< open html files in chrome>-------------------------------
+
+            private void Convert_MOuseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -541,6 +593,54 @@ namespace PrototypeGui_OOD_Pr4
             return mode;
         }
 
+        //----< strip off name of first part of path >---------------------
 
+        private string removeFirstDir(string path)
+        {
+            string modifiedPath = path;
+            int pos = path.IndexOf("/");
+            modifiedPath = path.Substring(pos + 1, path.Length - pos - 1);
+            return modifiedPath;
+        }
+        //----< respond to mouse double-click on dir name >----------------
+
+        private void reDirs_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // build path for selected dir
+            string selectedDir = (string)Dirsremo.SelectedItem;
+            if (selectedDir == null)
+                return;
+            string path;
+            if (selectedDir == "..")
+            {
+                if (pathStack_.Count > 1)  // don't pop off "Storage"
+                    pathStack_.Pop();
+                else
+                    return;
+            }
+            else
+            {
+                path = pathStack_.Peek() + "/" + selectedDir;
+                pathStack_.Push(path);
+            }
+            // display path in Dir TextBlcok
+            serverPath.Text = removeFirstDir(pathStack_.Peek());
+
+            // build message to get dirs and post it
+            CsEndPoint serverEndPoint = new CsEndPoint();
+            serverEndPoint.machineAddress = "localhost";
+            serverEndPoint.port = 8080;
+            CsMessage msg = new CsMessage();
+            msg.add("to", CsEndPoint.toString(serverEndPoint));
+            msg.add("from", CsEndPoint.toString(endPoint_));
+            msg.add("command", "getDirs");
+            msg.add("path", pathStack_.Peek());
+            translater.postMessage(msg);
+
+            // build message to get files and post it
+            msg.remove("command");
+            msg.add("command", "getFiles");
+            translater.postMessage(msg);
+        }
     }
 }

@@ -495,7 +495,7 @@ void ThreadProcClnt1()
   for (size_t i = 0; i < IMax; ++i)
   {
     Message msg(serverEP, clientEP);
-    msg.name("client #1 : msg #" + Utilities::Converter<size_t>::toString(i));
+    msg.name("client #1 : msg #" + UtilitieS::Converter<size_t>::toString(i));
     std::cout << "\n  " + comm.name() + " posting:  " << msg.name();
     comm.postMessage(msg);
     Message rply = comm.getMessage();
@@ -526,7 +526,7 @@ void ThreadProcClnt2()
   for (size_t i = 0; i < IMax; ++i)
   {
     Message msg(serverEP, clientEP);
-    msg.name("client #2 : msg #" + Utilities::Converter<size_t>::toString(i));
+    msg.name("client #2 : msg #" + UtilitieS::Converter<size_t>::toString(i));
     std::cout << "\n  " + comm.name() + " posting:  " << msg.name();
     comm.postMessage(msg);
     Message rply = comm.getMessage();
@@ -577,7 +577,7 @@ void DemoClientServer()
     {
       rply.to(msg.from());
       rply.from(serverEP);
-      rply.name("server reply #" + Utilities::Converter<size_t>::toString(++count) + " to " + msg.from().toString());
+      rply.name("server reply #" + UtilitieS::Converter<size_t>::toString(++count) + " to " + msg.from().toString());
 
       comm.postMessage(rply);
       if (msg.command() == "stop")
@@ -598,7 +598,7 @@ Cosmetic cosmetic;
 int main()
 {
   SUtils::Title("Demo of Message-Passing Communication");
-  Utilities::putline();
+  UtilitieS::putline();
 
   StaticLogger<1>::attach(&std::cout);
 

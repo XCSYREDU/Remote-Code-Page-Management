@@ -80,7 +80,7 @@ private:
 	//int class_mark = 0;
 	//int method_mark = 0;
 	DependencyTable dt_;
-	std::string outputDir_ = "..\\..\\..\\ConvertedWebpages\\";
+	std::string outputDir_ = "..\\ConvertedWebpages\\";
 	std::vector<std::string> convertedFiles_;
 	std::ofstream out_;
 	//std::vector<std::string> classbuffer_;
