@@ -34,9 +34,7 @@
 #include <thread>
 #include "../CppCommWithFileXfer/Message/Message.h"
 #include "../CppCommWithFileXfer/MsgPassingComm/Comm.h"
-#include "../Dependency/Dependency.h"
-#include "../Display/Display.h"
-#include "../Executive/Executive.h"
+#include "../CdPubInter/Cdinterface.h"
 #include <windows.h>
 #include <tchar.h>
 

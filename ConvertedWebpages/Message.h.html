@@ -1,0 +1,190 @@
+<DOCTYPE !HTML>
+<html>
+  <head>
+    <Title>Message.h</Title>
+    <style>
+      body {
+        padding:15px 40px;
+        font-family: Consolas;
+        font-size: 1.25em;
+        font-weight: normal;
+      }
+      span {
+        display:inline;
+      }
+      .toggleClassDisplay {  }
+      .toggleMethodDisplay{ }
+      .toggleSingCommentDisplay{ }
+      .toggleMultCommentDisplay{ }
+		.button1{
+		position: fixed;
+		top: 50px;
+		right: 50px;
+		width: 230px;
+		}
+		.button2{
+		position: fixed;
+		top: 80px;
+		right: 50px;
+		width: 230px;
+		}
+		.button3{
+		position: fixed;
+		top:110px;
+		right: 50px;
+		width: 230px;
+		}
+		.button4{
+		position: fixed;
+		top: 140px;
+		right: 50px;
+		width: 230px;
+		}
+      </style>
+      <script>
+			function showHideClass(className) {
+				let elems = document.getElementsByClassName(className);
+				if (elems === null) {
+					return;
+				}
+				for (let i = 0; i < elems.length; ++i) {
+					let displayProp = elems[i].style.display;
+					if (displayProp === 'none')
+						elems[i].style['display'] = "inline";
+					else
+						elems[i].style['display'] = "none";
+				}
+			}
+      </script>
+  </head>
+
+  <body>
+    <h3>Dependencies: 
+      <a href="Utilities.h.html">Utilities.h</a>
+    </h3>  <div>
+  <label><input type="checkbox" id ="hideC" value="hidefuncs" checked="true" onclick="showHideClass('toggleClassDisplay')">Show/Hide Class Contents</label><br>
+  <label><input type="checkbox" id ="hideM" value="hidefuncs" checked="true" onclick="showHideClass('toggleMethodDisplay')">Show/Hide Method Contents</label><br>
+  <label><input type="checkbox" id ="hideSC" value="hidefuncs" checked="true" onclick="showHideClass('toggleSingCommentDisplay')">Show/Hide Single Comments Contents</label><br>
+  <label><input type="checkbox" id ="hideMC" value="hidefuncs" checked="true" onclick="showHideClass('toggleMultCommentDisplay')">Show/Hide Multi Comments Contents</label><br>
+  </div>
+    <pre>
+#pragma once
+<div class="toggleSingCommentDisplay">/////////////////////////////////////////////////////////////////////////
+// Message.h - defines message structure used in communication channel //
+// ver 1.0                                                             //
+// Jim Fawcett, CSE687-OnLine Object Oriented Design, Fall 2017        //
+/////////////////////////////////////////////////////////////////////////</div>
+<div class="toggleMultCommentDisplay">/*
+*  Package Operations:
+*  -------------------
+*  This package defines an EndPoint struct and a Message class.  
+*  - Endpoints define a message source or destination with an address and port number.
+*  - Messages have an HTTP style structure with a set of attribute lines containing
+*    name:value pairs.
+*  - Message have a number of getter, setter methods for common attributes, and allow
+*    definition of other "custom" attributes.
+*
+*  Required Files:
+*  ---------------
+*  Message.h, Message.cpp, Utilities.h, Utilities.cpp
+*
+*  Maintenance History:
+*  --------------------
+*  ver 1.0 : 03 Oct 2017
+*  - first release
+*
+*/</div>
+#include "../Utilities/Utilities.h"
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;vector&gt;
+
+namespace MsgPassingCommunication
+{
+  <div class="toggleSingCommentDisplay">///////////////////////////////////////////////////////////////////</div>
+  <div class="toggleSingCommentDisplay">// EndPoint struct</div>
+
+  struct EndPoint
+  {
+    using Address = std::string;
+    using Port = size_t;
+    Address address;
+    Port port;
+    EndPoint(Address anAddress = "", Port aPort = 0);
+    std::string toString();
+    static EndPoint fromString(const std::string& str);
+  };
+
+  inline EndPoint::EndPoint(Address anAddress, Port aPort) : address(anAddress), port(aPort) <div class="toggleMethodDisplay">{}</div>
+
+  inline std::string EndPoint::toString()
+  <div class="toggleMethodDisplay">{
+    return address + ":" + Utilities::Converter&lt;size_t&gt;::toString(port);
+  }</div>
+
+  inline EndPoint EndPoint::fromString(const std::string& str)
+  <div class="toggleMethodDisplay">{
+    EndPoint ep;
+    size_t pos = str.find_first_of(':');
+    if (pos == str.length())
+      return ep;
+    ep.address = str.substr(0, pos);
+    std::string portStr = str.substr(pos + 1);
+    ep.port = Utilities::Converter&lt;size_t&gt;::toValue(portStr);
+    return ep;
+  }</div>
+  <div class="toggleSingCommentDisplay">///////////////////////////////////////////////////////////////////</div>
+  <div class="toggleSingCommentDisplay">// Message class</div>
+  <div class="toggleSingCommentDisplay">// - follows the style, but not the implementation details of</div>
+  <div class="toggleSingCommentDisplay">//   HTTP messages</div>
+
+  class Message
+  <div class="toggleClassDisplay">{
+  public:
+    using Key = std::string;
+    using Value = std::string;
+    using Attribute = std::string;
+    using Attributes = std::unordered_map&lt;Key, Value&gt;;
+    using Keys = std::vector&lt;Key&gt;;
+
+    Message();
+    Message(EndPoint to, EndPoint from);
+
+    Attributes& attributes();
+    void attribute(const Key& key, const Value& value);
+    Keys keys();
+    static Key attribName(const Attribute& attr);
+    static Value attribValue(const Attribute& attr);
+    bool containsKey(const Key& key);
+
+    EndPoint to();
+    void to(EndPoint ep);
+    EndPoint from();
+    void from(EndPoint ep);
+    std::string name();
+    void name(const std::string& nm);
+    std::string command();
+    void command(const std::string& cmd);
+    std::string file();
+    void file(const std::string& fl);
+    size_t contentLength();
+    void contentLength(size_t ln);
+    void clear();
+    std::string toString();
+    static Message fromString(const std::string& src);
+    std::ostream& show(std::ostream& out = std::cout);
+
+  private:
+    Attributes attributes_;
+    <div class="toggleSingCommentDisplay">// name            : msgName</div>
+    <div class="toggleSingCommentDisplay">// command         : msg Command</div>
+    <div class="toggleSingCommentDisplay">// to              : dst EndPoint</div>
+    <div class="toggleSingCommentDisplay">// from            : src EndPoint</div>
+    <div class="toggleSingCommentDisplay">// file            : file name</div>
+    <div class="toggleSingCommentDisplay">// content-length  : body length in bytes</div>
+    <div class="toggleSingCommentDisplay">// custom attributes</div>
+  };
+}
+    </pre>
+  </body>
+</html>

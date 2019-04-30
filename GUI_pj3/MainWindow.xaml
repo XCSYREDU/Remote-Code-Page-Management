@@ -37,7 +37,7 @@
                         <Label Content="Regex:" Margin="75,5,5,5"/>
                         <TextBox x:Name="Regex" Width="100" Height="25" Text="">
                         </TextBox>
-                        
+
                     </StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -93,7 +93,7 @@
                         </Grid.RowDefinitions>
                         <ListBox Grid.Row="0" x:Name="Dirsremo" x:FieldModifier="public" Margin="5" FontWeight="Medium" FontSize="12" MouseDoubleClick="reDirs_MouseDoubleClick" Grid.ColumnSpan="2"></ListBox>
                         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Background="#999" Grid.ColumnSpan="2"></GridSplitter>
-                        <ListBox Grid.Row="2" x:Name="Filesremo" x:FieldModifier="public" Margin="5,5,5,10" FontWeight="Medium" FontSize="12" SelectionMode="Single" SelectionChanged="Files_SelectionChanged" Grid.ColumnSpan="2" ></ListBox>
+                        <ListBox Grid.Row="2" x:Name="Filesremo" x:FieldModifier="public" Margin="5,5,5,10" FontWeight="Medium" FontSize="12" SelectionMode="Single" Grid.ColumnSpan="2" ></ListBox>
 
                     </Grid>
                 </DockPanel>
@@ -116,6 +116,28 @@
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <ListBox Grid.Row="0" x:Name="FilesCF" x:FieldModifier="public" Margin="10" FontWeight="Medium" FontSize="12" SelectionMode="Single" SelectionChanged="cFiles_SelectionChanged" Grid.ColumnSpan="2" Grid.RowSpan="3" MouseDoubleClick="Convert_MOuseDoubleClick" ></ListBox>
+                    </Grid>
+                </DockPanel>
+            </TabItem>
+            <TabItem Header="Server Files" Padding="10 5" Name="Serverfiles">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                        <Label>Path:</Label>
+                        <Label Width="20"></Label>
+                        <TextBlock x:Name="CurrPathServer" x:FieldModifier="public" VerticalAlignment="Center" FontWeight="Medium" FontSize="12"></TextBlock>
+                    </StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="17*"/>
+                            <ColumnDefinition Width="12*"/>
+                            <ColumnDefinition Width="264*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="5"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <ListBox Grid.Row="0" x:Name="FilesCFser" x:FieldModifier="public" Margin="10" FontWeight="Medium" FontSize="12" SelectionMode="Single" SelectionChanged="scFiles_SelectionChanged" Grid.ColumnSpan="3" Grid.RowSpan="3" MouseDoubleClick="sConvert_MOuseDoubleClick" ></ListBox>
                     </Grid>
                 </DockPanel>
             </TabItem>

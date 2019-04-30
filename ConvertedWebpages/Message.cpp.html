@@ -1,0 +1,352 @@
+<DOCTYPE !HTML>
+<html>
+  <head>
+    <Title>Message.cpp</Title>
+    <style>
+      body {
+        padding:15px 40px;
+        font-family: Consolas;
+        font-size: 1.25em;
+        font-weight: normal;
+      }
+      span {
+        display:inline;
+      }
+      .toggleClassDisplay {  }
+      .toggleMethodDisplay{ }
+      .toggleSingCommentDisplay{ }
+      .toggleMultCommentDisplay{ }
+		.button1{
+		position: fixed;
+		top: 50px;
+		right: 50px;
+		width: 230px;
+		}
+		.button2{
+		position: fixed;
+		top: 80px;
+		right: 50px;
+		width: 230px;
+		}
+		.button3{
+		position: fixed;
+		top:110px;
+		right: 50px;
+		width: 230px;
+		}
+		.button4{
+		position: fixed;
+		top: 140px;
+		right: 50px;
+		width: 230px;
+		}
+      </style>
+      <script>
+			function showHideClass(className) {
+				let elems = document.getElementsByClassName(className);
+				if (elems === null) {
+					return;
+				}
+				for (let i = 0; i < elems.length; ++i) {
+					let displayProp = elems[i].style.display;
+					if (displayProp === 'none')
+						elems[i].style['display'] = "inline";
+					else
+						elems[i].style['display'] = "none";
+				}
+			}
+      </script>
+  </head>
+
+  <body>
+    <h3>Dependencies: 
+      <a href="Message.h.html">Message.h</a>
+    </h3>  <div>
+  <label><input type="checkbox" id ="hideC" value="hidefuncs" checked="true" onclick="showHideClass('toggleClassDisplay')">Show/Hide Class Contents</label><br>
+  <label><input type="checkbox" id ="hideM" value="hidefuncs" checked="true" onclick="showHideClass('toggleMethodDisplay')">Show/Hide Method Contents</label><br>
+  <label><input type="checkbox" id ="hideSC" value="hidefuncs" checked="true" onclick="showHideClass('toggleSingCommentDisplay')">Show/Hide Single Comments Contents</label><br>
+  <label><input type="checkbox" id ="hideMC" value="hidefuncs" checked="true" onclick="showHideClass('toggleMultCommentDisplay')">Show/Hide Multi Comments Contents</label><br>
+  </div>
+    <pre>
+<div class="toggleSingCommentDisplay">///////////////////////////////////////////////////////////////////////////
+// Message.cpp - defines message structure used in communication channel //
+// ver 1.0                                                               //
+// Jim Fawcett, CSE687-OnLine Object Oriented Design, Fall 2017          //
+///////////////////////////////////////////////////////////////////////////</div>
+
+#include "Message.h"
+#include &lt;iostream&gt;
+
+using namespace MsgPassingCommunication;
+using SUtils = Utilities::StringHelper;
+
+<div class="toggleSingCommentDisplay">//----&lt; default constructor results in Message with no attributes &gt;----</div>
+
+Message::Message() <div class="toggleMethodDisplay">{}</div>
+
+<div class="toggleSingCommentDisplay">//----&lt; constructor accepting dst and src addresses &gt;------------------</div>
+
+Message::Message(EndPoint to, EndPoint from)
+<div class="toggleMethodDisplay">{
+  attributes_["to"] = to.toString();
+  attributes_["from"] = from.toString();
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; returns reference to Message attributes &gt;----------------------</div>
+
+Message::Attributes& Message::attributes()
+<div class="toggleMethodDisplay">{
+  return attributes_;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; adds or modifies an existing attribute &gt;-----------------------</div>
+
+void Message::attribute(const Key& key, const Value& value)
+<div class="toggleMethodDisplay">{
+  attributes_[key] = value;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; clears all attributes &gt;----------------------------------------</div>
+
+void Message::clear()
+<div class="toggleMethodDisplay">{
+  attributes_.clear();
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; returns vector of attribute keys &gt;-----------------------------</div>
+
+Message::Keys Message::keys()
+<div class="toggleMethodDisplay">{
+  Keys keys;
+  keys.reserve(attributes_.size());
+  for (auto kv : attributes_)
+  {
+    keys.push_back(kv.first);
+  }
+  return keys;
+}</div>
+<div class="toggleSingCommentDisplay">//---&lt; does this message have key? &gt;-----------------------------------</div>
+
+bool Message::containsKey(const Key& key)
+<div class="toggleMethodDisplay">{
+  if (attributes_.find(key) != attributes_.end())
+    return true;
+  return false;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; get to attribute &gt;---------------------------------------------</div>
+
+EndPoint Message::to()
+<div class="toggleMethodDisplay">{
+  if (containsKey("to"))
+  {
+    return EndPoint::fromString(attributes_["to"]);
+  }
+  return EndPoint();
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; set to attribute &gt;---------------------------------------------</div>
+
+void Message::to(EndPoint ep)
+<div class="toggleMethodDisplay">{
+  attributes_["to"] = ep.toString();
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; get from attribute &gt;-------------------------------------------</div>
+
+EndPoint Message::from()
+<div class="toggleMethodDisplay">{
+  if (containsKey("from"))
+  {
+    return EndPoint::fromString(attributes_["from"]);
+  }
+  return EndPoint();
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; set from attribute &gt;-------------------------------------------</div>
+
+void Message::from(EndPoint ep)
+<div class="toggleMethodDisplay">{
+  attributes_["from"] = ep.toString();
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; get name attribute &gt;-------------------------------------------</div>
+
+std::string Message::name()
+<div class="toggleMethodDisplay">{
+  if (containsKey("name"))
+  {
+    return attributes_["name"];
+  }
+  return "";
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; set name attribute &gt;-------------------------------------------</div>
+
+void Message::name(const std::string& nm)
+<div class="toggleMethodDisplay">{
+  attributes_["name"] = nm;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; get command attribute &gt;----------------------------------------</div>
+
+std::string Message::command()
+<div class="toggleMethodDisplay">{
+  if (containsKey("command"))
+  {
+    return attributes_["command"];
+  }
+  return "";
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; set command attribute &gt;----------------------------------------</div>
+
+void Message::command(const std::string& cmd)
+<div class="toggleMethodDisplay">{
+  attributes_["command"] = cmd;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; get file name attribute &gt;--------------------------------------</div>
+
+std::string Message::file()
+<div class="toggleMethodDisplay">{
+  if (containsKey("file"))
+  {
+    return attributes_["file"];
+  }
+  return "";
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; set file name attribute &gt;--------------------------------------</div>
+
+void Message::file(const std::string& fl)
+<div class="toggleMethodDisplay">{
+  attributes_["file"] = fl;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; get body length &gt;----------------------------------------------</div>
+
+size_t Message::contentLength()
+<div class="toggleMethodDisplay">{
+  if (containsKey("content-length"))
+  {
+    std::string lenStr = attributes_["content-length"];
+    return Utilities::Converter&lt;size_t&gt;::toValue(lenStr);
+  }
+  return 0;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; set body length &gt;----------------------------------------------</div>
+
+void Message::contentLength(size_t ln)
+<div class="toggleMethodDisplay">{
+  attributes_["content-length"] = Utilities::Converter&lt;size_t&gt;::toString(ln);
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; convert message to string representation &gt;---------------------</div>
+
+std::string Message::toString()
+<div class="toggleMethodDisplay">{
+  std::string temp;
+  for (auto kv : attributes_)
+  {
+    temp += kv.first + ":" + kv.second + "\n";
+  }
+  return temp + "\n";
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; extracts name from attribute string &gt;--------------------------</div>
+
+Message::Key Message::attribName(const Attribute& attrib)
+<div class="toggleMethodDisplay">{
+  size_t pos = attrib.find_first_of(':');
+  if (pos == attrib.length())
+    return "";
+  return attrib.substr(0, pos);
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; extracts value from attribute string &gt;-------------------------</div>
+
+Message::Value Message::attribValue(const Attribute& attrib)
+<div class="toggleMethodDisplay">{
+  size_t pos = attrib.find_first_of(':');
+  if (pos == attrib.length())
+    return "";
+  return attrib.substr(pos + 1, attrib.length() - pos);
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; creates message from message representation string &gt;-----------</div>
+
+Message Message::fromString(const std::string& src)
+<div class="toggleMethodDisplay">{
+  Message msg;
+  std::vector&lt;std::string&gt; splits = Utilities::StringHelper::split(src);
+  for (Attribute attr : splits)
+  {
+    if(attribName(attr) != "")
+      msg.attributes()[attribName(attr)] = attribValue(attr);
+  }
+  return msg;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; displays message on std::ostream &gt;-----------------------------</div>
+<div class="toggleMultCommentDisplay">/*
+*  - adds beginning newline and removes trailing newline
+*  - by default stream is std::cout
+*  - can be replaced by std::ostringstream to get display string
+*/</div>
+std::ostream& Message::show(std::ostream& out)
+<div class="toggleMethodDisplay">{
+  std::string temp = toString();  <div class="toggleSingCommentDisplay">// convert this message to string</div>
+  size_t pos = temp.find_last_of('\n');
+  if (pos &lt; temp.size())
+  {
+    temp[pos] = '\0';  <div class="toggleSingCommentDisplay">// remove last newline</div>
+  }
+  out &lt;&lt; "\n" &lt;&lt; temp; <div class="toggleSingCommentDisplay">// prepend newline</div>
+  return out;
+}</div>
+<div class="toggleSingCommentDisplay">//----&lt; test stub &gt;----------------------------------------------------</div>
+
+#ifdef TEST_MESSAGE
+
+int main()
+<div class="toggleMethodDisplay">{
+  SUtils::Title("Testing Message Class");
+
+  SUtils::title("testing endpoints");
+  EndPoint ep("localhost", 8080);
+  std::cout &lt;&lt; "\n  address = " &lt;&lt; ep.address;
+  std::cout &lt;&lt; "\n  port = " &lt;&lt; ep.port;
+  std::string epStr = ep.toString();
+  std::cout &lt;&lt; "\n  " &lt;&lt; epStr;
+
+  EndPoint newEp = EndPoint::fromString(epStr);
+  std::cout &lt;&lt; "\n  " &lt;&lt; newEp.toString();
+  Utilities::putline();
+
+  SUtils::title("testing messages");
+  Utilities::putline();
+
+  SUtils::title("creating message from Message::methods");
+  Message msg;
+  msg.name("msg#1");
+  msg.to(EndPoint("localhost", 8080));
+  msg.from(EndPoint("localhost", 8081));
+  msg.command("doIt");
+  msg.bodyLength(42);
+  msg.file("someFile");
+  msg.show();
+
+  SUtils::title("testing Message msg = fromString(msg.toString())");
+  Message newMsg = Message::fromString(msg.toString());
+  newMsg.show();
+
+  SUtils::title("retrieving attributes from message");
+  std::cout &lt;&lt; "\n  msg name          : " &lt;&lt; newMsg.name();
+  std::cout &lt;&lt; "\n  msg command       : " &lt;&lt; newMsg.command();
+  std::cout &lt;&lt; "\n  msg to            : " &lt;&lt; newMsg.to().toString();
+  std::cout &lt;&lt; "\n  msg from          : " &lt;&lt; newMsg.from().toString();
+  std::cout &lt;&lt; "\n  msg file          : " &lt;&lt; newMsg.file();
+  std::cout &lt;&lt; "\n  msg content-Length: " &lt;&lt; newMsg.contentLength();
+  Utilities::putline();
+
+  SUtils::title("adding custom attribute");
+  newMsg.attribute("customName", "customValue");
+  newMsg.show();
+
+  SUtils::title("testing assignment");
+  Message srcMsg;
+  srcMsg.name("srcMsg");
+  srcMsg.attribute("foobar", "feebar");
+  srcMsg.show();
+  std::cout &lt;&lt; "\n  assigning srcMsg to msg #1";
+  newMsg = srcMsg;
+  newMsg.show();
+
+  std::cout &lt;&lt; "\n\n";
+  return 0;
+}</div>
+#endif
+    </pre>
+  </body>
+</html>

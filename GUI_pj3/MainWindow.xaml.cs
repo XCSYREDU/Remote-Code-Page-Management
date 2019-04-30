@@ -125,6 +125,18 @@ namespace PrototypeGui_OOD_Pr4
             Filesremo.Items.Clear();
         }
         //----< function dispatched by child thread to main thread >-------
+        private void clearhtmlFiles()
+        {
+            FilesCFser.Items.Clear();
+        }
+        //----< function dispatched by child thread to main thread >-------
+
+        private void addhtmlFile(string file)
+        {
+            FilesCFser.Items.Add(file);
+        }
+
+        //----< function dispatched by child thread to main thread >-------
 
         private void addFile(string file)
         {
@@ -195,6 +207,34 @@ namespace PrototypeGui_OOD_Pr4
             };
             addClientProc("getFiles", getFiles);
         }
+
+        //----< load gethtml processing into dispatcher dictionary >---------
+        private void DispatcherLoadHtml()
+        {
+            Action<CsMessage> gethtmlFiles = (CsMessage rcvMsg) =>
+            {
+                Action clrhtmlFiles = () =>
+                {
+                    clearhtmlFiles();
+                };
+                Dispatcher.Invoke(clrhtmlFiles, new Object[] { });
+                var enumer = rcvMsg.attributes.GetEnumerator();
+                while (enumer.MoveNext())
+                {
+                    string key = enumer.Current.Key;
+                    if (key.Contains("html"))
+                    {
+                        Action<string> dohtmlFile = (string file) =>
+                        {
+                            addhtmlFile(file);
+                        };
+                        Dispatcher.Invoke(dohtmlFile, new Object[] { enumer.Current.Value });
+                    }
+                }
+            };
+            addClientProc("gethtmlFiles", gethtmlFiles);
+        }
+
         //----< load all dispatcher processing >---------------------------
 
         private void loadDispatcher()
@@ -223,7 +263,11 @@ namespace PrototypeGui_OOD_Pr4
             serverEndPoint.port = 8080;
 
             //PathTextBlock.Text = "Storage";
-            pathStack_.Push("../Storage");
+            if (pathStack_.Count == 0)
+            {
+                pathStack_.Push("../Storage");
+            }
+            string htmlfolder = "../ConvertedWebpages";
             CsMessage msg = new CsMessage();
             msg.add("to", CsEndPoint.toString(serverEndPoint));
             msg.add("from", CsEndPoint.toString(endPoint_));
@@ -233,8 +277,39 @@ namespace PrototypeGui_OOD_Pr4
             msg.remove("command");
             msg.add("command", "getFiles");
             translater.postMessage(msg);
+            msg.remove("command");
+            msg.remove("path");
+            msg.add("path", htmlfolder);
+            msg.add("command", "gethtmlFiles");
+            translater.postMessage(msg);
+            msg.remove("command");
+            msg.remove("path");
+            msg.add("command", "sendFiles");
+            string htmlfiles = "C:\\Users\\xiaoc\\Desktop\\www\\bkuo\\ConvertedWebpages\\FileSystem.cpp.html";
+            msg.add("path", htmlfiles);
+            translater.postMessage(msg);
         }
+        //----< Load Html files from server >----------------
 
+        private void loadserverhtml()
+        {
+
+            // load dispatcher
+            DispatcherLoadHtml();
+
+            CsEndPoint serverEndPoint = new CsEndPoint();
+            serverEndPoint.machineAddress = "localhost";
+            serverEndPoint.port = 8080;
+
+            string htmlfolder = "../ConvertedWebpages";
+            CurrPathServer.Text = System.IO.Path.GetFullPath("../../"+htmlfolder);
+            CsMessage msg = new CsMessage();
+            msg.add("to", CsEndPoint.toString(serverEndPoint));
+            msg.add("from", CsEndPoint.toString(endPoint_));
+            msg.add("path", htmlfolder);
+            msg.add("command", "gethtmlFiles");
+            translater.postMessage(msg);
+        }
 
         public MainWindow()
         {
@@ -245,7 +320,7 @@ namespace PrototypeGui_OOD_Pr4
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             loadremote();
-
+            //loadserverhtml();
             path = Directory.GetCurrentDirectory();
             path = getAncestorPath(3, path);
             LoadNavTab(path);
@@ -371,6 +446,14 @@ namespace PrototypeGui_OOD_Pr4
                 }
             }
         }
+        //----< Single click items inside server html files listbox>---------------------------------
+        
+        private void scFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+
         //----< Single Click items inside html files list box open webbrowser in webbrowser tab>------
 
         private void cFiles_SelectionChanged(
@@ -443,22 +526,11 @@ namespace PrototypeGui_OOD_Pr4
             }
         }
         //----< Process remote files >-----------------------------------
+
         private void Publish_files_Click_remo(object sender, RoutedEventArgs e)
         {
             try
             {
-                // start Comm
-                endPoint_ = new CsEndPoint();
-                endPoint_.machineAddress = "localhost";
-                endPoint_.port = 8082;
-                translater = new Translater();
-                translater.listen(endPoint_);
-
-                // start processing messages
-                processMessages();
-
-                // load dispatcher
-                loadDispatcher();
 
                 CsEndPoint serverEndPoint = new CsEndPoint();
                 serverEndPoint.machineAddress = "localhost";
@@ -538,13 +610,14 @@ namespace PrototypeGui_OOD_Pr4
                     {
                         path = Directory.GetCurrentDirectory();
                         path = getAncestorPath(3, path);
-                        path = path + "\\ConvertedWebpages";
+                        path = path + "\\SaveFiles";
                         path = System.IO.Path.GetFullPath(path);
                         LoadHtmlFile(path);
                     }
-                    else if(remotefiles.IsSelected == true)
+                    else if(Serverfiles.IsSelected == true)
                     {
-                        loadremote();
+                        loadserverhtml();
+                    
                     }
                 }
                 catch
@@ -602,6 +675,24 @@ namespace PrototypeGui_OOD_Pr4
             modifiedPath = path.Substring(pos + 1, path.Length - pos - 1);
             return modifiedPath;
         }
+        //----< server html files double click >---------------------------
+
+        private void sConvert_MOuseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            CsEndPoint serverEndPoint = new CsEndPoint();
+            serverEndPoint.machineAddress = "localhost";
+            serverEndPoint.port = 8080;
+            CsMessage msg = new CsMessage();
+            msg.add("to", CsEndPoint.toString(serverEndPoint));
+            msg.add("from", CsEndPoint.toString(endPoint_));
+            msg.add("command", "sendFiles");
+            msg.add("path", CurrPathServer.Text.ToString() + "\\" + FilesCFser.SelectedItem.ToString());
+            translater.postMessage(msg);
+
+        }
+
+
+
         //----< respond to mouse double-click on dir name >----------------
 
         private void reDirs_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -627,6 +718,7 @@ namespace PrototypeGui_OOD_Pr4
             serverPath.Text = removeFirstDir(pathStack_.Peek());
 
             // build message to get dirs and post it
+
             CsEndPoint serverEndPoint = new CsEndPoint();
             serverEndPoint.machineAddress = "localhost";
             serverEndPoint.port = 8080;
@@ -641,6 +733,7 @@ namespace PrototypeGui_OOD_Pr4
             msg.remove("command");
             msg.add("command", "getFiles");
             translater.postMessage(msg);
+
         }
     }
 }

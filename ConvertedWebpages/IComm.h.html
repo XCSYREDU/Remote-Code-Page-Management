@@ -1,0 +1,97 @@
+<DOCTYPE !HTML>
+<html>
+  <head>
+    <Title>IComm.h</Title>
+    <style>
+      body {
+        padding:15px 40px;
+        font-family: Consolas;
+        font-size: 1.25em;
+        font-weight: normal;
+      }
+      span {
+        display:inline;
+      }
+      .toggleClassDisplay {  }
+      .toggleMethodDisplay{ }
+      .toggleSingCommentDisplay{ }
+      .toggleMultCommentDisplay{ }
+		.button1{
+		position: fixed;
+		top: 50px;
+		right: 50px;
+		width: 230px;
+		}
+		.button2{
+		position: fixed;
+		top: 80px;
+		right: 50px;
+		width: 230px;
+		}
+		.button3{
+		position: fixed;
+		top:110px;
+		right: 50px;
+		width: 230px;
+		}
+		.button4{
+		position: fixed;
+		top: 140px;
+		right: 50px;
+		width: 230px;
+		}
+      </style>
+      <script>
+			function showHideClass(className) {
+				let elems = document.getElementsByClassName(className);
+				if (elems === null) {
+					return;
+				}
+				for (let i = 0; i < elems.length; ++i) {
+					let displayProp = elems[i].style.display;
+					if (displayProp === 'none')
+						elems[i].style['display'] = "inline";
+					else
+						elems[i].style['display'] = "none";
+				}
+			}
+      </script>
+  </head>
+
+  <body>
+    <h3>Dependencies: 
+      <a href="Message.h.html">Message.h</a>
+    </h3>  <div>
+  <label><input type="checkbox" id ="hideC" value="hidefuncs" checked="true" onclick="showHideClass('toggleClassDisplay')">Show/Hide Class Contents</label><br>
+  <label><input type="checkbox" id ="hideM" value="hidefuncs" checked="true" onclick="showHideClass('toggleMethodDisplay')">Show/Hide Method Contents</label><br>
+  <label><input type="checkbox" id ="hideSC" value="hidefuncs" checked="true" onclick="showHideClass('toggleSingCommentDisplay')">Show/Hide Single Comments Contents</label><br>
+  <label><input type="checkbox" id ="hideMC" value="hidefuncs" checked="true" onclick="showHideClass('toggleMultCommentDisplay')">Show/Hide Multi Comments Contents</label><br>
+  </div>
+    <pre>
+#pragma once
+<div class="toggleSingCommentDisplay">/////////////////////////////////////////////////////////////////////
+// IComm.h - interface for message-passing communication facility  //
+// ver 1.0                                                         //
+// Jim Fawcett, CSE687-OnLine Object Oriented Design, Fall 2017    //
+/////////////////////////////////////////////////////////////////////</div>
+
+#include &lt;string&gt;
+#include "../Message/Message.h"
+
+namespace MsgPassingCommunication
+{
+  class IComm
+  <div class="toggleClassDisplay">{
+  public:
+    static IComm* create(const std::string& machineAddress, size_t port);
+    virtual void start() = 0;
+    virtual void stop() = 0;
+    virtual void postMessage(Message msg) = 0;
+    virtual Message getMessage() = 0;
+    virtual std::string name() = 0;
+    virtual ~IComm() <div class="toggleMethodDisplay">{}</div>
+  };
+}
+    </pre>
+  </body>
+</html>
