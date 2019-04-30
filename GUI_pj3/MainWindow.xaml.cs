@@ -140,7 +140,28 @@ namespace PrototypeGui_OOD_Pr4
 
         private void addFile(string file)
         {
-            Filesremo.Items.Add(file);
+            string[] regex = Environment.GetCommandLineArgs();
+            List<string> reg = new List<string>();
+            int aa = 0;
+            foreach (var i in regex)
+            {
+                if (i.Contains("*."))
+                {
+                    reg.Add(i.Remove(0, 1));
+                    aa++;
+                }
+            }
+            if(aa != 0)
+            {
+                if (reg.Contains(System.IO.Path.GetExtension(file)))
+                {
+                    Filesremo.Items.Add(file);
+                }
+            }
+            else
+            {
+                Filesremo.Items.Add(file);
+            }
         }
         //----< add client processing for message with key >---------------
 
@@ -261,12 +282,15 @@ namespace PrototypeGui_OOD_Pr4
             CsEndPoint serverEndPoint = new CsEndPoint();
             serverEndPoint.machineAddress = "localhost";
             serverEndPoint.port = 8080;
-
+            string[] temp = Environment.GetCommandLineArgs();
             //PathTextBlock.Text = "Storage";
             if (pathStack_.Count == 0)
             {
-                pathStack_.Push("../Storage");
+                pathStack_.Push(temp[1]);
             }
+            string path_re = System.IO.Path.GetFullPath("../../../"+pathStack_.Peek());
+            serverPath.Text = path_re;
+
             string htmlfolder = "../ConvertedWebpages";
             CsMessage msg = new CsMessage();
             msg.add("to", CsEndPoint.toString(serverEndPoint));
@@ -303,6 +327,7 @@ namespace PrototypeGui_OOD_Pr4
 
             string htmlfolder = "../ConvertedWebpages";
             CurrPathServer.Text = System.IO.Path.GetFullPath("../../"+htmlfolder);
+
             CsMessage msg = new CsMessage();
             msg.add("to", CsEndPoint.toString(serverEndPoint));
             msg.add("from", CsEndPoint.toString(endPoint_));
@@ -320,10 +345,7 @@ namespace PrototypeGui_OOD_Pr4
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             loadremote();
-            //loadserverhtml();
-            path = Directory.GetCurrentDirectory();
-            path = getAncestorPath(3, path);
-            LoadNavTab(path);
+            
 
             string[] regex = Environment.GetCommandLineArgs();
             List<String> temp1 = new List<string>();
@@ -331,12 +353,10 @@ namespace PrototypeGui_OOD_Pr4
             {
                 if (i.Contains(".*"))
                 {
-                    Regex.Text = i;
                     Regex2.Text = i;
                 }
             }
-            string path_re = System.IO.Path.GetFullPath("../Storage");
-            serverPath.Text = path_re;
+
         }
         //----< find parent paths >--------------------------------------
 
@@ -345,54 +365,6 @@ namespace PrototypeGui_OOD_Pr4
             for (int i = 0; i < n; ++i)
                 path = Directory.GetParent(path).FullName;
             return path;
-        }
-        //----< file Find Libs tab with subdirectories and files >-------
-        
-        void LoadNavTab(string path)
-        {
-            Dirs.Items.Clear();
-            CurrPath.Text = path;
-            string[] dirs = Directory.GetDirectories(path);
-            Dirs.Items.Add("..");
-            foreach (string dir in dirs) {
-                DirectoryInfo di = new DirectoryInfo(dir);
-                string name = System.IO.Path.GetDirectoryName(dir);
-                Dirs.Items.Add(di.Name);
-            }
-            string[] regex = Environment.GetCommandLineArgs();
-            List<string> reg = new List<string>();
-            SearchBox.Text = "";
-            int aa = 0;
-            foreach (var i in regex){
-                if (i.Contains("*.")){
-                    SearchBox.Text = SearchBox.Text+i;
-                    reg.Add(i.Remove(0, 1));
-                    aa++;
-                }
-            }
-            Files.Items.Clear();
-            string[] files = Directory.GetFiles(path);
-            if (aa != 0) {
-                foreach (string file in files) {
-                    if (reg.Contains(System.IO.Path.GetExtension(file))) {
-                        string name = System.IO.Path.GetFileName(file);
-                        Files.Items.Add(name);
-                    }
-                }
-            }
-            else {
-                foreach (string file in files){
-                        string name = System.IO.Path.GetFileName(file);
-                        Files.Items.Add(name);
-                }
-            }
-            string[] temp = Environment.GetCommandLineArgs();
-            string cmd_path = "";
-            for(int i = 1;i<temp.Length;i++)
-            {
-                cmd_path = cmd_path + temp[i];
-            }
-            cmd.Text = cmd_path;
         }
         //----< Load html dirs and files >-------------------------------
 
@@ -472,58 +444,14 @@ namespace PrototypeGui_OOD_Pr4
             SetWebBrowserFeatures(11);
             webbrowser.Navigate(selStr);
         }
-        //----< button to publish code into html files >----------------------------- 
-
-        private void Publish_files_Click(object sender, RoutedEventArgs e)
-        {
-            try {
-                string[] temp = Environment.GetCommandLineArgs();
-                List<String> temp1 = new List<string>();
-                foreach (var i in temp)
-                {
-                    if (i.Contains(".*") && Regex.Text != "")
-                    {
-                        temp1.Add(Regex.Text);
-                        continue;
-                    }
-                    temp1.Add(i);
-                }
-                Itranslator trans = TraslatorFactory.createTranslator();
-                trans.pcfile(temp1.Count, temp1);
-            }
-            catch
-            {
-
-            }
-        }
-
         //----< unselect files called by unloading SelectionWindow >-----
 
         public void unselectFiles()
         {
             unselecting = true;  // needed to avoid using selection logic
                                  //selectedFiles.Clear();
-            Files.UnselectAll();
             FilesCF.UnselectAll();
             selectedFiles.Clear();
-        }
-        //----< move into double-clicked directory, display contents >---
-
-        private void Dirs_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            try
-            {
-                string selectedDir = Dirs.SelectedItem.ToString();
-                if (selectedDir == "..")
-                    path = getAncestorPath(1, path);
-                else
-                    path = System.IO.Path.Combine(path, selectedDir);
-                LoadNavTab(path);
-            }
-            catch
-            {
-                // just return
-            }
         }
         //----< Process remote files >-----------------------------------
 
@@ -562,11 +490,9 @@ namespace PrototypeGui_OOD_Pr4
 
             }
         }
-        
+        //----< open html files in chrome>-------------------------------
 
-            //----< open html files in chrome>-------------------------------
-
-            private void Convert_MOuseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void Convert_MOuseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             try
             {
@@ -600,13 +526,7 @@ namespace PrototypeGui_OOD_Pr4
             {
                 try
                 {
-                    if (cpptab.IsSelected == true)
-                    {
-                        path = Directory.GetCurrentDirectory();
-                        path = getAncestorPath(3, path);
-                        LoadNavTab(path);
-                    }
-                    else if (htmlfiles.IsSelected == true)
+                    if (htmlfiles.IsSelected == true)
                     {
                         path = Directory.GetCurrentDirectory();
                         path = getAncestorPath(3, path);
